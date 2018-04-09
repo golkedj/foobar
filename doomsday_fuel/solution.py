@@ -9,16 +9,40 @@ def answer(m):
     print 'max_s_value'
     print max_s_value
     probabilities = [0] * len(terminal_s_values)
-    for i in range(0, len(probabilities)):
-        print 'i'
-        print i
-        probability_equation = {
-            'probability': Fraction(1, 1),
-            'absorbtion': Fraction(1, 1)
-        }
-        probability = find_probability_recursive(m, i, 0, probability_equation)
-        print 'probability'
-    # return recursive_check_index(m, terminal_s_values, [], 0)
+
+    transform_matrix(m)
+    print 'm'
+    print m
+
+    # probability_equation = {
+    #     'probability': Fraction(0, 1),
+    #     'absorption': Fraction(1, 1)
+    # }
+    # probability = find_probability_recursive(m, 3, 0, probability_equation)
+    # print 'probability'
+    # print probability
+
+    # for i in range(0, len(probabilities)):
+    #     print 'i'
+    #     print i
+    #     probability_equation = {
+    #         'probability': Fraction(0, 1),
+    #         'absorption': Fraction(1, 1)
+    #     }
+    #     probability = find_probability_recursive(m, i, 0, probability_equation)
+    #     print 'probability'
+    # # return recursive_check_index(m, terminal_s_values, [], 0)
+
+
+def transform_matrix(m):
+    for i in range(len(m)):
+        row_sum = sum(m[i])
+        print 'row_sum'
+        print row_sum
+        for j in range(len(m[i])):
+            m[i][j] = Fraction(m[i][j], row_sum or 1)
+    return m
+
 
 def find_probability_recursive(m, target_s_index, current_s_index, probability_equation=None):
     print '*' * 100
@@ -36,7 +60,7 @@ def find_probability_recursive(m, target_s_index, current_s_index, probability_e
     if current_s_index > len(m):
         return {
             'probability': Fraction(0, 1),
-            'absorbtion': Fraction(0, 1)
+            'absorption': Fraction(0, 1)
         }
 
 
