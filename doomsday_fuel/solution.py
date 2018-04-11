@@ -1,87 +1,73 @@
-from fractions import Fraction
+import fractions
+# from fractions import Fraction
+
+ABSORPTION = 'absorption'
+PROBABILITY = 'probability'
 
 def answer(m):
     # your code here
     terminal_s_values = get_terminal_s_values(m)
-    print 'terminal_s_values'
-    print terminal_s_values
     max_s_value = terminal_s_values[-1]
-    print 'max_s_value'
-    print max_s_value
-    probabilities = [0] * len(terminal_s_values)
+    probabilities = []
 
     transform_matrix(m)
-    print 'm'
-    print m
 
-    # probability_equation = {
-    #     'probability': Fraction(0, 1),
-    #     'absorption': Fraction(1, 1)
-    # }
-    # probability = find_probability_recursive(m, 3, 0, probability_equation)
-    # print 'probability'
-    # print probability
+    for i in terminal_s_values:
+        probability = find_probability_recursive(m, i, 0)
+        probabilities.append(probability)
 
-    # for i in range(0, len(probabilities)):
-    #     print 'i'
-    #     print i
-    #     probability_equation = {
-    #         'probability': Fraction(0, 1),
-    #         'absorption': Fraction(1, 1)
-    #     }
-    #     probability = find_probability_recursive(m, i, 0, probability_equation)
-    #     print 'probability'
-    # # return recursive_check_index(m, terminal_s_values, [], 0)
+    denominators = list(map(lambda x: x.denominator, probabilities))
 
+    lcm = get_lcm(denominators)
+
+    for i in range(len(probabilities)):
+        probability = probabilities[i]
+        probabilities[i] = probability.numerator*(lcm/probability.denominator)
+
+    probabilities.append(lcm)
+    # print 'probabilities'
+    # print probabilities
+    return probabilities
 
 def transform_matrix(m):
     for i in range(len(m)):
         row_sum = sum(m[i])
-        print 'row_sum'
-        print row_sum
         for j in range(len(m[i])):
-            m[i][j] = Fraction(m[i][j], row_sum or 1)
+            m[i][j] = fractions.Fraction(m[i][j], row_sum or 1)
     return m
 
 
-def find_probability_recursive(m, target_s_index, current_s_index, probability_equation=None):
-    print '*' * 100
-    print 'm'
-    print m
-    print 'target_s_index'
-    print target_s_index
-
+def find_probability_recursive(m, target_s_index, current_s_index,
+                               probability_equation=None):
     if current_s_index == target_s_index:
-        print 's index found'
-        print current_s_index
-        print 'probability_equation'
-        print probability_equation
+        prob = probability_equation[PROBABILITY]
+        prob /= (fractions.Fraction(1, 1) - probability_equation[ABSORPTION])
+        return prob
 
-    if current_s_index > len(m):
-        return {
-            'probability': Fraction(0, 1),
-            'absorption': Fraction(0, 1)
+    if not probability_equation:
+        probability_equation = {
+            PROBABILITY: m[current_s_index][target_s_index],
+            ABSORPTION: m[current_s_index][current_s_index + 1]
         }
+    else:
+        if reduce(lambda x, y: x + y, m[current_s_index]) != 0:
+            temp_probability = probability_equation[ABSORPTION]
+            temp_probability *= m[current_s_index][target_s_index]
+            probability_equation[PROBABILITY] += temp_probability
+            probability_equation[ABSORPTION] = probability_equation[ABSORPTION] * m[current_s_index][current_s_index - 1]
+
+    return find_probability_recursive(
+        m,
+        target_s_index,
+        current_s_index + 1,
+        probability_equation)
 
 
-    find_probability_recursive()
-
-
-    #
-    # if current_s_index = :
-    #     print 'returning s_index'
-    #     print s_index
-    #     return s_index
-    #
-    # non_zero_indices = get_none_zero_indices(m[s_index])
-    # print 'non_zero_indices'
-    # print non_zero_indices
-    #
-    # for non_zero_index in non_zero_indices:
-    #     paths.append
-    # m[s_index][non_zero_index] -= 1
-    # recursive_check_index()
-    # paths.append(recursive_check_index(m, terminal_s_values, paths, non_zero_index))
+def get_lcm(numbers):
+    lcm = numbers[0]
+    for x in numbers:
+        lcm = (lcm*x)/fractions.gcd(lcm, x)
+    return lcm
 
 
 def get_terminal_s_values(m):
@@ -110,6 +96,10 @@ test_inputs = [
 expected_outputs = [0, 3, 2, 9, 14]
 
 actual_outputs = answer(test_inputs)
+print 'actual_outputs'
+print actual_outputs
+print 'expected_outputs'
+print expected_outputs
 
 test_inputs = [
     [0, 2, 1, 0, 0],
@@ -119,6 +109,12 @@ test_inputs = [
     [0, 0, 0, 0, 0]]
 expected_outputs = [7, 6, 8, 21]
 
+actual_outputs = answer(test_inputs)
+print 'actual_outputs'
+print actual_outputs
+print 'expected_outputs'
+print expected_outputs
+
 test_inputs = [
     [0, 1, 0, 0, 0, 1],
     [4, 0, 0, 3, 2, 0],
@@ -127,3 +123,8 @@ test_inputs = [
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0]]
 expected_outputs = [0, 3, 2, 9, 14]
+
+print 'actual_outputs'
+print actual_outputs
+print 'expected_outputs'
+print expected_outputs
