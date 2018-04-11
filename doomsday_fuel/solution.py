@@ -7,7 +7,6 @@ PROBABILITY = 'probability'
 def answer(m):
     # your code here
     terminal_s_values = get_terminal_s_values(m)
-    max_s_value = terminal_s_values[-1]
     probabilities = []
 
     transform_matrix(m)
@@ -25,9 +24,8 @@ def answer(m):
         probabilities[i] = probability.numerator*(lcm/probability.denominator)
 
     probabilities.append(lcm)
-    # print 'probabilities'
-    # print probabilities
     return probabilities
+
 
 def transform_matrix(m):
     for i in range(len(m)):
@@ -78,10 +76,6 @@ def get_terminal_s_values(m):
             terminal_s_rows.append(i)
 
     return terminal_s_rows
-
-
-def get_none_zero_indices(m):
-    return list(filter(lambda x: x != 0, m))
 
 
 test_inputs = [
