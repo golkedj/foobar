@@ -74,60 +74,36 @@ def find_prob_equ_recursive(m, target_s_index, current_s_index=0,
         }
         first_pass = False
 
-    # print 'get_none_zero_indices'
-    #
-    # print 'non_zero_indices'
-    # print non_zero_indices
-    # return probability_equation
-
-    # if not first_pass and current_s_index  0:
-    #     return probability_equation
     if current_s_index == target_s_index:
-        # print 'returning current_s_index == target_s_index'
         return {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: fractions.Fraction(1, 1) * multiplier
         }
         return multiplier
     elif reduce(lambda x, y: x + y, m[current_s_index]) == 0:
-        # print 'returning terminal state'
         return {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: fractions.Fraction(0, 1)
         }
         return fractions.Fraction(0, 1)
     elif current_s_index in visited_states:
-       # print 'returning visited states'
         return {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: multiplier
         }
         return multiplier
     else:
-        # print 'current_s_index'
-        # print current_s_index
-        # print 'probability_equation'
-        # print probability_equation
         visited_states.add(current_s_index)
         non_zero_indices = set(get_none_zero_indices(m[current_s_index]))
-        # non_zero_indices = set(non_zero_indices).difference(visited_states)
         non_zero_indices = non_zero_indices - set([target_s_index])
 
         probability = multiplier * m[current_s_index][target_s_index]
-        # print 'probability'
-        # print probability
-        absorption = fractions.Fraction(0, 1)
         absorption_equation = {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: fractions.Fraction(0, 1)
         }
 
         for i in non_zero_indices:
-            # probability_equation[ABSORPTION] = m[current_s_index][i]
-            # print 'current_s_index'
-            # print current_s_index
-            # print 'i'
-            # print i
             temp_absorption = find_prob_equ_recursive(
                 m,
                 target_s_index,
