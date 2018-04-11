@@ -5,6 +5,7 @@ ABSORPTION = 'absorption'
 PROBABILITY = 'probability'
 visited_states = set()
 
+
 def answer(m):
     global visited_states
     # your code here
@@ -50,17 +51,18 @@ def calculate_probability(probability_equation):
 
 
 def combine_probability_equations(equ_1, equ_2):
-    new_prob = {}
+    new_prob = dict()
     new_prob[PROBABILITY] = equ_1[PROBABILITY] + equ_2[PROBABILITY]
     new_prob[ABSORPTION] = (equ_1[ABSORPTION] + equ_2[ABSORPTION])
     return new_prob
 
 
 def add_absorptions(equ_1, equ_2):
-    new_equ = {}
+    new_equ = dict()
     new_equ[PROBABILITY] = equ_1[PROBABILITY] + equ_2[PROBABILITY]
     new_equ[ABSORPTION] = equ_1[ABSORPTION] + equ_2[ABSORPTION]
     return new_equ
+
 
 def find_prob_equ_recursive(m, target_s_index, current_s_index=0,
                             multiplier=fractions.Fraction(1, 1),
@@ -79,23 +81,20 @@ def find_prob_equ_recursive(m, target_s_index, current_s_index=0,
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: fractions.Fraction(1, 1) * multiplier
         }
-        return multiplier
     elif reduce(lambda x, y: x + y, m[current_s_index]) == 0:
         return {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: fractions.Fraction(0, 1)
         }
-        return fractions.Fraction(0, 1)
     elif current_s_index in visited_states:
         return {
             PROBABILITY: fractions.Fraction(0, 1),
             ABSORPTION: multiplier
         }
-        return multiplier
     else:
         visited_states.add(current_s_index)
-        non_zero_indices = set(get_none_zero_indices(m[current_s_index]))
-        non_zero_indices = non_zero_indices - set([target_s_index])
+        non_zero_indices = set(get_non_zero_indices(m[current_s_index]))
+        non_zero_indices = non_zero_indices - {target_s_index}
 
         probability = multiplier * m[current_s_index][target_s_index]
         absorption_equation = {
@@ -134,7 +133,7 @@ def get_terminal_s_values(m):
     return terminal_s_rows
 
 
-def get_none_zero_indices(m):
+def get_non_zero_indices(m):
     indices = []
     for i in range(len(m)):
         if m[i] != fractions.Fraction(0, 1):
@@ -182,6 +181,13 @@ test_inputs = [
     [0, 0, 0, 0, 0, 0]]
 expected_outputs = [0, 3, 2, 9, 14]
 
+actual_outputs = answer(test_inputs)
+
+print 'actual_outputs'
+print actual_outputs
+print 'expected_outputs'
+print expected_outputs
+
 test_inputs = [
     [0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0],
@@ -197,4 +203,3 @@ print 'actual_outputs'
 print actual_outputs
 print 'expected_outputs'
 print expected_outputs
-
