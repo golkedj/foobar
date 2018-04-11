@@ -13,23 +13,10 @@ def answer(m):
 
     transform_matrix(m)
 
-    # probability = find_prob_equ_recursive(m, 5)
-    # print 'probability'
-    # print probability
-    # probability = calculate_probability(probability)
-    # print 'calculated probability'
-    # print probability
-
     for i in terminal_s_values:
         visited_states = set()
-        # print 'i'
-        # print i
         probability = find_prob_equ_recursive(m, i)
-        # print 'probability equation'
-        # print probability
         probability = calculate_probability(probability)
-        # print 'probability'
-        # print probability
         probabilities.append(probability)
 
     denominators = list(map(lambda x: x.denominator, probabilities))
@@ -63,28 +50,14 @@ def calculate_probability(probability_equation):
 
 
 def combine_probability_equations(equ_1, equ_2):
-    # print 'equ_1'
-    # print equ_1
-    # print 'equ_2'
-    # print equ_2
     new_prob = {}
     new_prob[PROBABILITY] = equ_1[PROBABILITY] + equ_2[PROBABILITY]
-    # new_prob[PROBABILITY] += (equ_1[ABSORPTION] * equ_2[PROBABILITY])
-    # print 'new_prob[PROBABILITY]'
-    # print new_prob[PROBABILITY]
-    # if equ_1[ABSORPTION] == fractions.Fraction(0, 1):
-    #     new_prob[ABSORPTION] = equ_2[ABSORPTION]
-    # else:
     new_prob[ABSORPTION] = (equ_1[ABSORPTION] + equ_2[ABSORPTION])
     return new_prob
 
 
 def add_absorptions(equ_1, equ_2):
     new_equ = {}
-    # print 'equ_1'
-    # print equ_1
-    # print 'equ_2'
-    # print equ_2
     new_equ[PROBABILITY] = equ_1[PROBABILITY] + equ_2[PROBABILITY]
     new_equ[ABSORPTION] = equ_1[ABSORPTION] + equ_2[ABSORPTION]
     return new_equ
@@ -160,33 +133,12 @@ def find_prob_equ_recursive(m, target_s_index, current_s_index=0,
                 target_s_index,
                 current_s_index=i,
                 multiplier=m[current_s_index][i] * multiplier,
-                probability_equation=probability_equation)
-            # temp_absorption[ABSORPTION] *= m[current_s_index][i]
-            # print 'absorption_equation'
-            # print absorption_equation
-            # print 'temp_absorption'
-            # print temp_absorption
-            # absorption += temp_absorption
-            # if temp_absorption:
+                probability_equation=probability_equation,
+                first_pass=first_pass)
             absorption_equation = add_absorptions(absorption_equation, temp_absorption)
-            # print absorption
             probability_equation[PROBABILITY] = probability
-        # print 'probability_equation'
-        # print probability_equation
-        # print 'absorption_equation'
-        # print absorption_equation
         new_equation = combine_probability_equations(probability_equation, absorption_equation)
-        # print 'new_equation'
-        # print new_equation
         return new_equation
-
-
-
-    # return find_prob_equ_recursive(
-    #     m,
-    #     target_s_index,
-    #     current_s_index + 1,
-    #     probability_equation)
 
 
 def get_lcm(numbers):
@@ -254,10 +206,19 @@ test_inputs = [
     [0, 0, 0, 0, 0, 0]]
 expected_outputs = [0, 3, 2, 9, 14]
 
-# actual_outputs = answer(test_inputs)
-#
-# print 'actual_outputs'
-# print actual_outputs
-# print 'expected_outputs'
-# print expected_outputs
+test_inputs = [
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+]
+expected_outputs = [0, 1, 0, 0, 1]
+
+actual_outputs = answer(test_inputs)
+
+print 'actual_outputs'
+print actual_outputs
+print 'expected_outputs'
+print expected_outputs
 
