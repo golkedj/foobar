@@ -80,7 +80,7 @@ def find_prob_equ_recursive(m, target_s_index, current_s_index=0,
     if current_s_index == target_s_index:
         return {
             PROBABILITY: fractions.Fraction(0, 1),
-            ABSORPTION: fractions.Fraction(1, 1) * multiplier
+            ABSORPTION: multiplier
         }
     elif reduce(lambda x, y: x + y, m[current_s_index]) == 0:
         return {
