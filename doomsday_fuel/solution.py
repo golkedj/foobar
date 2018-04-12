@@ -28,7 +28,8 @@ def answer(m):
         probability = probabilities[i]
         probabilities[i] = probability.numerator*(lcm/probability.denominator)
 
-    probabilities.append(lcm)
+    if len(probabilities) > 0:
+        probabilities.append(lcm)
     return probabilities
 
 
@@ -172,21 +173,6 @@ print actual_outputs
 print 'expected_outputs'
 print expected_outputs
 
-test_inputs = [
-    [0, 1, 0, 1, 0, 1],
-    [4, 0, 0, 3, 2, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0]]
-expected_outputs = [0, 3, 2, 9, 14]
-
-actual_outputs = answer(test_inputs)
-
-print 'actual_outputs'
-print actual_outputs
-print 'expected_outputs'
-print expected_outputs
 
 test_inputs = [
     [0, 0, 1, 0, 0],
